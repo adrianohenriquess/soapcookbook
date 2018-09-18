@@ -1,0 +1,24 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:Invoice" xmlns="urn:Invoice"
+	elementFormDefault="qualified">
+	<xsd:include schemaLocation="CustomerChameleon.xsd" />
+	<!-- Invoice has a Product and a Customer -->
+	<xsd:element name="Invoice">
+		<xsd:complexType>
+			<xsd:sequence>
+				<!-- Define product here -->
+				<xsd:element name="product">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="name" type="xsd:string" />
+							<xsd:element name="sku" type="xsd:string" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<!-- Pull from Chameleon -->
+				<xsd:element name="customer" type="CustomerType"
+					minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
