@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 public class UpdateXMLValue {
 
 	public static void main(String[] args) throws Exception {
-		InputStream xmlSource = UpdateXMLValue.class.getResourceAsStream("Catalog.xml");
+		InputStream xmlSource = UpdateXMLValue.class.getResourceAsStream("CatalogEJB.xml");
 
 		// find the book titled 'Hamlet' and select its price.
 		String xpath = "/catalog/book[title='Hamlet']/price";
