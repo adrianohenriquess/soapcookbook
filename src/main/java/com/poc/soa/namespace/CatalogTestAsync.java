@@ -11,10 +11,11 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.Dispatch;
+import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
-public class CatalogTest {
+public class CatalogTestAsync {
 
 	public static void dispatchMsgIsbnTest() throws SOAPException {
 		try {
@@ -39,9 +40,10 @@ public class CatalogTest {
 
 			out.println("\nInvoking...");
 
-			SOAPMessage response = dispatch.invoke(request);
-
-			response.writeTo(System.out);
+			Response<SOAPMessage> response = dispatch.invokeAsync(request);
+			
+			SOAPMessage soapMessage = response.get();
+			soapMessage.writeTo(out);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (WebServiceException wsex) {

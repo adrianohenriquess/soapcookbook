@@ -1,5 +1,6 @@
 package com.poc.soa.namespace;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Local;
@@ -46,6 +47,11 @@ public class CatalogEJB {
 		}
 		
 		logger.info("Returning book: " + book.getTitle());
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			logger.log(Level.SEVERE, e.getMessage());
+		}
 		return book;
 	}
 

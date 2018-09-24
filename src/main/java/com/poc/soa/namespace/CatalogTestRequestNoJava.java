@@ -2,19 +2,24 @@ package com.poc.soa.namespace;
 
 import static java.lang.System.out;
 
-import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
-public class CatalogTest {
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+public class CatalogTestRequestNoJava {
 
 	public static void dispatchMsgIsbnTest() throws SOAPException {
 		try {
@@ -30,18 +35,33 @@ public class CatalogTest {
 
 			Dispatch<SOAPMessage> dispatch = service.createDispatch(portQName, SOAPMessage.class, Service.Mode.MESSAGE);
 
-			String dataFile = "isbnMsg.txt";
+			SOAPMessage request = MessageFactory.newInstance().createMessage();
 
-			FileInputStream fileInputStream = new FileInputStream(dataFile);
+			// obtendo a composição da soapMessage
+			SOAPPart soapPart = request.getSOAPPart();
+			SOAPEnvelope env = soapPart.getEnvelope();
+			SOAPBody body = env.getBody();
 
-			SOAPMessage request = MessageFactory.newInstance().createMessage(null, fileInputStream);
+			String iNs = "http://ns.soacookbook.com/catalog";
+			String elementName = "isbn";
+			QName isbnQName = new QName(iNs, elementName);
+
+			body.addBodyElement(isbnQName).setValue("12345");
+
+			// debug print what we're sending
 			request.writeTo(out);
 
 			out.println("\nInvoking...");
 
 			SOAPMessage response = dispatch.invoke(request);
 
-			response.writeTo(System.out);
+			Document doc = response.getSOAPBody().extractContentAsDocument();
+
+			NodeList isbnNodes = (NodeList) doc.getElementsByTagName("lastName");
+
+			String value = isbnNodes.item(0).getTextContent();
+			out.println("\nAuthor LastName=" + value);
+			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (WebServiceException wsex) {
